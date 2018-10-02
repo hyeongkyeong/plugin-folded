@@ -27,15 +27,15 @@ class syntax_plugin_folded_div extends DokuWiki_Syntax_Plugin {
     function getPType() { return 'stack'; }
     function getAllowedTypes() { return array('container','substition','protected','disabled','paragraphs','formatting'); }
     function getSort(){ return 404; }
-    function connectTo($mode) { $this->Lexer->addEntryPattern('\+\+\+\+.*?\|(?=.*\+\+\+\+)',$mode,'plugin_folded_div'); }
-    function postConnect() { $this->Lexer->addExitPattern('\+\+\+\+','plugin_folded_div'); }
+    function connectTo($mode) { $this->Lexer->addEntryPattern('<fold down>.*?\|',$mode,'plugin_folded_div'); }
+    function postConnect() { $this->Lexer->addExitPattern('</fold>','plugin_folded_div'); }
 
    /**
     * Handle the match
     */
     function handle($match, $state, $pos, Doku_Handler $handler){
         if ($state == DOKU_LEXER_ENTER){
-            $match = trim(substr($match,4,-1)); // strip markup
+            $match = trim(substr($match,11,-1)); // strip markup
         } else if ($state == DOKU_LEXER_UNMATCHED) {
             $handler->_addCall('cdata',array($match), $pos);
             return false;
